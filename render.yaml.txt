@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: docx-api
+    env: python
+    plan: free
+    buildCommand: ""
+    startCommand: gunicorn docx_api:app

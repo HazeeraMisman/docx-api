@@ -1,0 +1,24 @@
+from flask import Flask, request, jsonify
+from docx import Document
+import base64
+import io
+
+app = Flask(__name__)
+
+@app.route('/extract-text', methods=['POST'])
+def extract_text():
+    try:
+        data = request.get_json()
+        base64_docx = data.get("base64Docx")
+
+        if not base64_docx:
+            return jsonify({"error": "No file content provided"}), 400
+
+        docx_bytes = base64.b64decode(base64_docx)
+        file_stream = io.BytesIO(docx_bytes)
+        doc = Document(file_stream)
+
+        text = "\n".join([para.text for para in doc.paragraphs])
+        return jsonify({"text": text})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
