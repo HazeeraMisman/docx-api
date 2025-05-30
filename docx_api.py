@@ -11,6 +11,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def extract_text_get():
     file_base64 = request.args.get('file_base64')
+    print("Header received:", "Yes" if base64_docx else "No")
 
     # Health check endpoint
     if not file_base64:
