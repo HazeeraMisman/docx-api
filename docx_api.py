@@ -8,20 +8,16 @@ import os
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
-    return "API is running!"
+@app.route('/', methods=['GET'])
+def extract_text_get():
+    file_base64 = request.args.get('file_base64')
 
-@app.route('/extract-text', methods=['POST'])
-def extract_text():
+    # Health check endpoint
+    if not file_base64:
+        return "API is running!"
+
     try:
-        data = request.get_json()
-        base64_docx = data.get("base64Docx")
-
-        if not base64_docx:
-            return jsonify({"error": "No file content provided"}), 400
-
-        docx_bytes = base64.b64decode(base64_docx)
+        docx_bytes = base64.b64decode(file_base64)
         file_stream = io.BytesIO(docx_bytes)
         doc = Document(file_stream)
 
